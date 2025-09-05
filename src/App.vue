@@ -10,7 +10,7 @@ import LibraryRegistrationForm from './views/HomeView.vue'
       <BHeader />
     </header>
 
-    <main class="main-box">
+    <main class="container pb-5">
       <!-- <LibraryRegistrationForm /> -->
       <!-- <JSONLab /> -->
        <router-view></router-view>
