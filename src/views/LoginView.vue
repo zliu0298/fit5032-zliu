@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import router from '@/router'
+import { isAuthenticated } from '@/authenticate'
 
 const formData = ref({
   username: '',
@@ -14,7 +16,13 @@ const submitForm = () => {
   validateName(true)
   validatePassword(true)
   if (!errors.value.username && !errors.value.password) {
-    submittedCards.value.push({ ...formData.value })
+    // submittedCards.value.push({ ...formData.value })
+    if (formData.value.username === 'admin' && formData.value.password === 'Admin123456*') {
+        isAuthenticated.value = true
+        router.push({ name: 'About' })
+    } else {
+        router.push('access-denied')
+    }
     clearForm()
   }
 }
@@ -66,11 +74,11 @@ const validatePassword = (blur) => {
 
 <template>
   <header class="text-center mb-4"> 
-    <h1>🗄️ W5. Library Registration Form</h1>
-    <p>
+    <h1>Login</h1>
+    <!-- <p>
       This form now includes validation. Registered users are displayed in a data table below
       (PrimeVue).
-    </p>
+    </p> -->
   </header>
         
   <form @submit.prevent="submitForm">
