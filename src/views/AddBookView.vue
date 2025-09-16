@@ -8,6 +8,7 @@
 </script> -->
 <template>
   <div class="container mt-4">
+    <BookList />
     <h1 class="mb-4">Add Book</h1>
 
     <form @submit.prevent="addBook">
@@ -42,6 +43,7 @@
 import { ref } from 'vue'
 import { db } from '@/firebase/init'   
 import { collection, addDoc } from 'firebase/firestore'
+import BookList from '@/components/BookList.vue'
 
 const isbn = ref('')
 const name = ref('')
