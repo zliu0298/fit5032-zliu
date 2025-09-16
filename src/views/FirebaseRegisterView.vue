@@ -18,21 +18,24 @@ const submitForm = () => {
     // submittedCards.value.push({ ...formData.value })
     if (formData.value.username === 'admin' && formData.value.password === 'Admin123456*') {
         isAuthenticated.value = true
+        localStorage.setItem('role', 'admin')   // 👈 保存角色
         router.push({ name: 'About' })
-    } else if(formData.value.username != 'admin') {
+    } else if (formData.value.username != 'admin') {
         createUserWithEmailAndPassword(
-            getAuth(), formData.value.username, formData.value.password)
-            .then((data)=>{
-                console.log("Firebase Register Succeed data", data)
-                // isAuthenticated.value = true
-                router.push({ name: 'FireLogin' })
-            }).catch((error) => {
-                console.log(error.code)
-                errors.value.authentication = error.code
-            })
-    }else {
+            getAuth(), formData.value.username, formData.value.password
+        )
+        .then((data)=>{
+            console.log("Firebase Register Succeed data", data)
+            localStorage.setItem('role', 'user')   // 👈 普通用户
+            router.push({ name: 'FireLogin' })
+        }).catch((error) => {
+            console.log(error.code)
+            errors.value.authentication = error.code
+        })
+    } else {
         router.push('access-denied')
     }
+
     clearForm()
   }
 }

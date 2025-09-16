@@ -15,7 +15,8 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    component: AboutView
+    component: AboutView,
+    meta: { requiresAdmin: true }   // 👈 只有 admin 才能访问
   },
   {
     path: '/login',
@@ -32,13 +33,11 @@ const routes = [
     name: 'FireRegister',
     component: FirebaseRegisterView
   },
-  { path: '/access-denied', name: 'AccessDenied', component: () => import('@/views/AccessDenied.vue') }
-//   {
-//     path: '/access-denied',
-//     name: 'AccessDenied',
-//     component: AccessDenied
-//   }
-
+  { 
+    path: '/access-denied', 
+    name: 'AccessDenied', 
+    component: () => import('@/views/AccessDenied.vue') 
+  }
 ]
 
 const router = createRouter({
@@ -46,9 +45,18 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
-    return { name: 'Login', query: { redirect: to.fullPath } }
+router.beforeEach((to, from, next) => {
+  // 先检查是否需要 admin
+  if (to.meta.requiresAdmin) {
+    const role = localStorage.getItem('role')  // 👈 从 localStorage 获取用户角色
+    if (role === 'admin') {
+      next()
+    } else {
+      next('/access-denied')
+    }
+  } else {
+    // 其他页面正常放行
+    next()
   }
 })
 
