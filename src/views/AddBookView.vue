@@ -8,9 +8,7 @@
 </script> -->
 <template>
   <div class="container mt-4">
-    <BookList />
     <h1 class="mb-4">Add Book</h1>
-
     <form @submit.prevent="addBook">
       <div class="mb-3">
         <label for="isbn" class="form-label">ISBN:</label>
@@ -36,18 +34,24 @@
 
       <button type="submit" class="btn btn-primary">Add Book</button>
     </form>
+
+    <hr class="my-5" />
+
+    <!-- import BookList -->
+    <BookList />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { db } from '@/firebase/init'   
+import { db } from '@/firebase/init'
 import { collection, addDoc } from 'firebase/firestore'
-import BookList from '@/components/BookList.vue'
+import BookList from '@/components/BookList.vue'   
 
 const isbn = ref('')
 const name = ref('')
 
+// add books
 const addBook = async () => {
   try {
     const isbnNumber = Number(isbn.value)
@@ -61,20 +65,22 @@ const addBook = async () => {
       name: name.value,
     })
 
-    console.log('Book added with ID: ', docRef.id)
+    console.log('Book added with ID:', docRef.id)
     alert('Book added successfully!')
 
+    // clear list
     isbn.value = ''
     name.value = ''
   } catch (error) {
-    console.error('Error adding book: ', error)
-    alert('Failed: ' + error.message)
+    console.error('Error adding book:', error)
+    alert('Failed to add book: ' + error.message)
   }
 }
 </script>
 
 <style scoped>
 .container {
-  max-width: 500px;
+  max-width: 600px;
 }
 </style>
+
