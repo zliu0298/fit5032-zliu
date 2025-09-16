@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import router from '@/router'
 import { isAuthenticated } from '@/authenticate'
 
@@ -20,13 +20,12 @@ const submitForm = () => {
         isAuthenticated.value = true
         router.push({ name: 'About' })
     } else if(formData.value.username != 'admin') {
-        signInWithEmailAndPassword(
+        createUserWithEmailAndPassword(
             getAuth(), formData.value.username, formData.value.password)
             .then((data)=>{
-                console.log("Firebase Login Succeed data", data)
-                console.log("Firebase Login Succeed", getAuth().currentUser)
-                isAuthenticated.value = true
-                router.push({ name: 'About' })
+                console.log("Firebase Register Succeed data", data)
+                // isAuthenticated.value = true
+                router.push({ name: 'FireLogin' })
             }).catch((error) => {
                 console.log(error.code)
                 errors.value.authentication = error.code
@@ -89,7 +88,7 @@ const validatePassword = (blur) => {
 
 <template>
   <header class="text-center mb-4"> 
-    <h1>Firebase Login</h1>
+    <h1>Firebase Register</h1>
     <!-- <p>
       This form now includes validation. Registered users are displayed in a data table below
       (PrimeVue).
