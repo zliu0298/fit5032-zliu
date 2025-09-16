@@ -18,7 +18,7 @@ const submitForm = () => {
     // submittedCards.value.push({ ...formData.value })
     if (formData.value.username === 'admin' && formData.value.password === 'Admin123456*') {
         isAuthenticated.value = true
-        localStorage.setItem('role', 'admin')   // 👈 保存角色
+        localStorage.setItem('role', 'admin')   // admin user
         router.push({ name: 'About' })
     } else if(formData.value.username != 'admin') {
         signInWithEmailAndPassword(
@@ -28,7 +28,7 @@ const submitForm = () => {
             console.log("Firebase Login Succeed data", data)
             console.log("Firebase Login Succeed", getAuth().currentUser)
             isAuthenticated.value = true
-            localStorage.setItem('role', 'user')   // 👈 普通用户
+            localStorage.setItem('role', 'user')   // normal user
             router.push({ name: 'About' })
         }).catch((error) => {
             console.log(error.code)

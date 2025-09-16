@@ -1,46 +1,50 @@
 <script setup lang="ts">
 import { isAuthenticated } from '@/authenticate';
 import router from '@/router';
+import { getAuth, signOut } from 'firebase/auth';   // import Firebase signOut
 
-const logout = () => {
-  isAuthenticated.value = false
-  router.push('/login')
+const logout = async () => {
+  try {
+    await signOut(getAuth())                       // use Firebase to logout
+    console.log("User after logout:", getAuth().currentUser) // should be null
+    localStorage.removeItem("role")                // clear user
+    isAuthenticated.value = false                  
+    router.push('/login')                         
+  } catch (error) {
+    console.error("Logout failed:", error)
+  }
 }
-
 </script>
 
 <template>
-  <!-- Using Bootstrap's Header template (starter code) -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
   <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <router-link to="/" class="nav-link" active-class="active" aria-current="page"
-            >Home (Week 5)</router-link
-          >
+          <router-link to="/" class="nav-link" active-class="active" aria-current="page">
+            Home (Week 5)
+          </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
-        <!-- <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
-        </li> -->
         <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active" aria-current="page"
-            >Login</router-link>
+          <router-link to="/login" class="nav-link" active-class="active" aria-current="page">
+            Login
+          </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/FireLogin" class="nav-link" active-class="active" aria-current="page">Firebase Login</router-link>
+          <router-link to="/FireLogin" class="nav-link" active-class="active" aria-current="page">
+            Firebase Login
+          </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/FireRegister" class="nav-link" active-class="active" aria-current="page">Firebase Register</router-link>
+          <router-link to="/FireRegister" class="nav-link" active-class="active" aria-current="page">
+            Firebase Register
+          </router-link>
         </li>
         <li class="nav-item">
           <button v-if="isAuthenticated" class="nav-link" @click="logout">Logout</button>
-          <!-- <router-link to="/logout" v-if="isAuthenticated" class="nav-link" active-class="active" aria-current="page"
-            >Logout</router-link
-          > -->
         </li>
       </ul>
     </header>
@@ -83,3 +87,4 @@ const logout = () => {
   outline: 0;
 }
 </style>
+

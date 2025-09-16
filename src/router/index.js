@@ -16,7 +16,7 @@ const routes = [
     path: '/about',
     name: 'About',
     component: AboutView,
-    meta: { requiresAdmin: true }   // 👈 只有 admin 才能访问
+    meta: { requiresAdmin: true }   // only admin can access
   },
   {
     path: '/login',
@@ -46,16 +46,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // 先检查是否需要 admin
+  // check whether admin
   if (to.meta.requiresAdmin) {
-    const role = localStorage.getItem('role')  // 👈 从 localStorage 获取用户角色
+    const role = localStorage.getItem('role')  // get user from localStorage
     if (role === 'admin') {
       next()
     } else {
       next('/access-denied')
     }
   } else {
-    // 其他页面正常放行
     next()
   }
 })
