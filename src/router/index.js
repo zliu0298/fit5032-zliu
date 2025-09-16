@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '@/views/LoginView.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import { isAuthenticated } from '@/authenticate'
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView
+  },
+  {
+    path: '/FireLogin',
+    name: 'FireLogin',
+    component: FirebaseSigninView
   },
   { path: '/access-denied', name: 'AccessDenied', component: () => import('@/views/AccessDenied.vue') }
 //   {

@@ -28,8 +28,10 @@ const logout = () => {
         </li> -->
         <li class="nav-item">
           <router-link to="/login" class="nav-link" active-class="active" aria-current="page"
-            >Login</router-link
-          >
+            >Login</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FireLogin" class="nav-link" active-class="active" aria-current="page">Firebase Login</router-link>
         </li>
         <li class="nav-item">
           <button v-if="isAuthenticated" class="nav-link" @click="logout">Logout</button>

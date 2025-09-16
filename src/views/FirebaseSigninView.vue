@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import router from '@/router'
 import { isAuthenticated } from '@/authenticate'
 
@@ -20,7 +19,15 @@ const submitForm = () => {
     if (formData.value.username === 'admin' && formData.value.password === 'Admin123456*') {
         isAuthenticated.value = true
         router.push({ name: 'About' })
-    } else {
+    } else if(formData.value.username != 'admin') {
+        signInWithEmailAndPassword(
+            getAuth(), formData.value.username, formData.value.password)
+            .then((data)=>{
+                console.log("Firebase Login Succeed data", data)
+                console.log("Firebase Login Succeed", getAuth().currentUser)
+                router.push({ name: 'About' })
+            })
+    }else {
         router.push('access-denied')
     }
     clearForm()
