@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import {getFirestore} from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,8 +16,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
+
+// const db = getFirestore(app)
+
+// export { db }
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 
-const db = getFirestore(app)
+const auth = getAuth(app)
+const db   = getFirestore(app)
 
-export { db }
+export { app, auth, db }
