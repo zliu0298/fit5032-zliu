@@ -27,6 +27,36 @@ exports.countBooks = onRequest((req, res) => {
   });
 });
 
+exports.addBookUppercase = onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      if (req.method !== 'POST') return res.status(405).send('Use POST');
+
+      const body = req.body || {};
+      const isbn = body.isbn ?? null;
+      const name = body.name ?? null;
+
+      const title  = body.title  ?? name ?? '';
+      const author = body.author ?? '';
+      const notes  = body.notes  ?? '';
+
+      const doc = isbn !== null && name !== null
+        ? { isbn, name: String(name).toUpperCase(), createdAt: new Date().toISOString() }
+        : {
+            title:  String(title).toUpperCase(),
+            author: String(author).toUpperCase(),
+            notes:  String(notes).toUpperCase(),
+            createdAt: new Date().toISOString(),
+          };
+
+      const ref = await admin.firestore().collection('books').add(doc);
+      res.status(201).send({ id: ref.id });
+    } catch (e) {
+      res.status(500).send({ error: 'add failed' });
+    }
+  });
+});
+
 
 // For cost control, you can set the maximum number of containers that can be
 // running at the same time. This helps mitigate the impact of unexpected

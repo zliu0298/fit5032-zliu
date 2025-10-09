@@ -13,7 +13,7 @@ export default {
     methods: {
         async getBookCount() {
             try {
-                const response = await axios.get('https://us-central1-week7-zihan.cloudfunctions.net/countBooks');
+                const response = await axios.get('https://countbooks-y7juewmqkq-uc.a.run.app');
                 this.count = response.data.count;
                 this.error = null;
             } catch (error) {
