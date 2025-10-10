@@ -59,6 +59,11 @@ const logout = async () => {
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/CountBookAPI" class="nav-link" active-class="active" aria-current="page">
+            Count Book API
+          </router-link>
+        </li>
+        <li class="nav-item">
           <button v-if="isAuthenticated" class="nav-link" @click="logout">Logout</button>
         </li>
       </ul>
