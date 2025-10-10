@@ -7,6 +7,7 @@ import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import GetBookCountView from '../views/GetBookCountView.vue'
 import WeatherView from '../views/WeatherView.vue'
 import CountBookAPI from '../views/CountBookAPI.vue'
+import GetAllBookAPI from '../views/GetAllBookAPI.vue'
 import AddBookView from '../views/AddBookView.vue'
 import { isAuthenticated } from '@/authenticate'
 
@@ -56,6 +57,11 @@ const routes = [
     path: '/CountBookAPI',
     name: 'CountBookAPI',
     component: CountBookAPI
+  },
+  {
+    path: '/GetAllBookAPI',
+    name: 'GetAllBookAPI',
+    component: GetAllBookAPI
   },
   { 
     path: '/access-denied', 

@@ -7,22 +7,24 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const {setGlobalOptions} = require("firebase-functions");
-// functions/index.js
-const {onRequest} = require("firebase-functions/v2/https");
+// functions/index.js（节选）
+const { onRequest } = require('firebase-functions/v2/https');
+const { setGlobalOptions } = require('firebase-functions/v2/options');
 const admin = require("firebase-admin");
 const cors = require("cors")({origin: true});
 
 admin.initializeApp();
 
+setGlobalOptions({maxInstances: 10});
+
 exports.countBooks = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const snap = await admin.firestore().collection("books").get();
-      res.status(200).send({count: snap.size});
+      res.status(200).json({count: snap.size});
     } catch (err) {
       console.error("Error counting books:", err);
-      res.status(500).send({error: "Error counting books"});
+      res.status(500).json({error: "Error counting books"});
     }
   });
 });
@@ -30,29 +32,45 @@ exports.countBooks = onRequest((req, res) => {
 exports.addBookUppercase = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
-      if (req.method !== 'POST') return res.status(405).send('Use POST');
+      if (req.method !== "POST") return res.status(405).send("Use POST");
 
       const body = req.body || {};
       const isbn = body.isbn ?? null;
       const name = body.name ?? null;
 
-      const title  = body.title  ?? name ?? '';
-      const author = body.author ?? '';
-      const notes  = body.notes  ?? '';
+      const title = body.title ?? name ?? "";
+      const author = body.author ?? "";
+      const notes = body.notes ?? "";
 
-      const doc = isbn !== null && name !== null
-        ? { isbn, name: String(name).toUpperCase(), createdAt: new Date().toISOString() }
-        : {
-            title:  String(title).toUpperCase(),
-            author: String(author).toUpperCase(),
-            notes:  String(notes).toUpperCase(),
-            createdAt: new Date().toISOString(),
-          };
+      const doc = (isbn !== null && name !== null) ?
+        {isbn, name: String(name).toUpperCase(), createdAt: new Date().toISOString()} :
+        {
+          title: String(title).toUpperCase(),
+          author: String(author).toUpperCase(),
+          notes: String(notes).toUpperCase(),
+          createdAt: new Date().toISOString(),
+        };
 
-      const ref = await admin.firestore().collection('books').add(doc);
-      res.status(201).send({ id: ref.id });
+      const ref = await admin.firestore().collection("books").add(doc);
+      res.status(201).json({id: ref.id});
     } catch (e) {
-      res.status(500).send({ error: 'add failed' });
+      console.error("addBookUppercase error:", e);
+      res.status(500).json({error: "add failed"});
+    }
+  });
+});
+
+exports.getAllBooks = onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      if (req.method !== "GET") return res.status(405).send("Use GET");
+
+      const snap = await admin.firestore().collection("books").get();
+      const items = snap.docs.map((d) => ({id: d.id, ...d.data()})); // 注意外层()确保返回对象
+      res.status(200).json(items);
+    } catch (e) {
+      console.error("getAllBooks error:", e);
+      res.status(500).json({error: "getAllBooks failed"});
     }
   });
 });
@@ -68,7 +86,7 @@ exports.addBookUppercase = onRequest((req, res) => {
 // functions should each use functions.runWith({ maxInstances: 10 }) instead.
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
-setGlobalOptions({maxInstances: 10});
+
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started

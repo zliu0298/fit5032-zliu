@@ -1,35 +1,31 @@
 <script>
-// import { error } from 'firebase-functions/logger';
-// import { count } from 'firebase/firestore';
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
-    data() {
-        return {
-            jsondata: null,
-            error: null,
-        };
+  data() {
+    return { jsondata: null, error: null }
+  },
+  mounted() {
+    this.getBookCountAPI()
+  },
+  methods: {
+    async getBookCountAPI() {
+      try {
+        const { data } = await axios.get('https://countbooks-y7juewmqkq-uc.a.run.app') // 你的云函数URL
+        this.jsondata = JSON.stringify(data, null, 2)
+        this.error = null
+      } catch (e) {
+        console.error('Error fetching book count:', e)
+        this.error = e?.message || 'fetch failed'
+        this.jsondata = null
+      }
     },
-    mounted() {
-        this.getBookCountAPI();
-    },
-    methods: {
-        async getBookCountAPI() {
-            try {
-                const response = await axios.get('https://countbooks-y7juewmqkq-uc.a.run.app');
-                this.jsondata = response.data;
-                this.error = null;
-            } catch (error) {
-                console.error('Error fetching book count:', error);
-                this.error = error;
-                this.count = null;
-            }
-        },
-    },
-};
-
+  },
+}
 </script>
 
 <template>
-    <pre>{{ jsondata }}</pre>
+  <pre v-if="jsondata">{{ jsondata }}</pre>
+  <p v-else-if="error" class="text-danger">{{ error }}</p>
+  <p v-else>Loading…</p>
 </template>
